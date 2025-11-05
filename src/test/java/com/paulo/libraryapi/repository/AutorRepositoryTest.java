@@ -1,6 +1,7 @@
 package com.paulo.libraryapi.repository;
 
 import com.paulo.libraryapi.model.Autor;
+import com.paulo.libraryapi.model.Livro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,9 @@ public class AutorRepositoryTest {
 
     @Autowired
     AutorRepository repository;
+
+    @Autowired
+    LivroRepository livroRepository;
 
     @Test
     public void salvarTest() {
@@ -61,5 +65,30 @@ public class AutorRepositoryTest {
         var id = UUID.fromString("8f432bc7-16af-4070-bdc7-a22e0680df5f");
         repository.deleteById(id);
         System.out.println("Autor Removido");
+    }
+
+    @Test
+    void listarLivroAutor() {
+        try {
+            var id = UUID.fromString("526174f2-4d81-414b-8062-cdc334c755e1");
+            var autor = repository.findById(id).orElse(null);
+            if (autor != null) {
+                List<Livro> livrosLista = livroRepository.findByAutor(autor);
+                autor.setLivros(livrosLista);
+
+                if (autor.getLivros() != null && !autor.getLivros().isEmpty()) {
+                    autor.getLivros().forEach(livro -> System.out.println(livro.getTitulo()));
+                } else {
+                    System.out.println("Nenhum livro encontrado para este autor.");
+                }
+            } else {
+                System.out.println("Autor não encontrado.");
+            }
+        }
+        catch (IllegalArgumentException e) {
+            System.out.println("ID inválido fornecido.");
+        } catch (Exception e) {
+            System.out.println("Ocorreu um erro ao listar os livros do autor: " + e.getMessage());
+        }
     }
 }
