@@ -9,7 +9,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class LivroRepositoryTest {
@@ -75,5 +79,50 @@ class LivroRepositoryTest {
         UUID id = UUID.fromString("44b4c794-6a30-45b7-90b0-0e92d9652711");
         repository.deleteById(id);
     }
+
+    @Test
+    void pesquisarPorTituloTest() {
+        List<Livro> lista = repository.findByTituloIgnoreCase("O picapau amarelo");
+        if(lista.isEmpty()) {
+            System.out.println("Nenhum livro encontrado com esse título.");
+            return;
+        }
+        lista.forEach(System.out::println);
+
+    }
+
+    @Test
+    void pesquisarPorIsbnTest() {
+        List<Livro> lista = repository.findByIsbn("8569-8569");
+        if(lista.isEmpty()) {
+            System.out.println("Nenhum livro encontrado com esse ISBN.");
+            return;
+        }
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    void pesquisarPorTituloAndPrecoTest() {
+        var preco = BigDecimal.valueOf(100,00);
+        List<Livro> lista = repository.findByTituloIgnoreCaseAndPreco("O picapau amarelo", preco);
+        if(lista.isEmpty()) {
+            System.out.println("Nenhum livro encontrado com esse Titulo e Preço.");
+            return;
+        }
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    void pesquisarPorTituloOrPrecoTest() {
+        var isbn = "8569-8569";
+        List<Livro> lista = repository.findByTituloIgnoreCaseOrIsbn("O picapau amarelo", isbn);
+        if(lista.isEmpty()) {
+            System.out.println("Nenhum livro encontrado com esse Titulo ou ISBN.");
+            return;
+        }
+        lista.forEach(System.out::println);
+    }
+
+
 
 }
