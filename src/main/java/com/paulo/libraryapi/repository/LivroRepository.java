@@ -39,6 +39,7 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     @Query("select distinct l.titulo from Livro l")
     List<String> listarNomesDiferentesLivros();
 
-    @Query("select l from Livro l where l.genero = :genero")
-    List<Livro> findByGenero(@Param("genero") GeneroLivro generoLivro);
+    @Query("select l from Livro l where l.genero = :genero order by :paramOrdenacao")
+    List<Livro> findByGenero(@Param("genero") GeneroLivro generoLivro,
+                             @Param("paramOrdenacao") String nomePropriedade);
 }
